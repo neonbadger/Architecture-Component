@@ -16,10 +16,23 @@
 
 package com.example.android.sunshine.data.database;
 
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.Index;
+import android.arch.persistence.room.PrimaryKey;
+import android.arch.persistence.room.Room;
+
 import java.util.Date;
 
+/**
+ * Defines the schema of a table in {@link Room} for a single weather forecast.
+ * The date is used as {@link Index} so that its uniqueness can be ensured.
+ * Indexes also allow for a faster lookup for the column.
+ */
+@Entity(tableName = "weather", indices = {@Index(value = {"date"}, unique = true)})
 public class WeatherEntry {
 
+    @PrimaryKey(autoGenerate = true)
     private int id;
     private int weatherIconId;
     private Date date;
@@ -42,7 +55,32 @@ public class WeatherEntry {
      * @param wind Wind speed
      * @param degrees Wind direction
      */
+    @Ignore
     public WeatherEntry(int weatherIconId, Date date, double min, double max, double humidity, double pressure, double wind, double degrees) {
+        this.weatherIconId = weatherIconId;
+        this.date = date;
+        this.min = min;
+        this.max = max;
+        this.humidity = humidity;
+        this.pressure = pressure;
+        this.wind = wind;
+        this.degrees = degrees;
+    }
+
+    /**
+     * This constructor is needed for Room to create WeatherEntries.
+     * @param id
+     * @param weatherIconId
+     * @param date
+     * @param min
+     * @param max
+     * @param humidity
+     * @param pressure
+     * @param wind
+     * @param degrees
+     */
+    public WeatherEntry(int id, int weatherIconId, Date date, double min, double max, double humidity, double pressure, double wind, double degrees) {
+        this.id = id;
         this.weatherIconId = weatherIconId;
         this.date = date;
         this.min = min;
